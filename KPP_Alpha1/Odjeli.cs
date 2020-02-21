@@ -95,28 +95,10 @@ namespace KPP_Alpha1
         //PRETRAŽIVANJE - SEARCH - PRETRAGA
         private void Txt_pretrazivanje_TextChanged(object sender, EventArgs e)
         {
-            (DGV.DataSource as DataTable).DefaultView.RowFilter = string.Format("naziv LIKE '%{0}%'", txt_pretrazivanje.Text.Trim());
-            if (DGV.Rows[0].Cells[0].Value == null) { return; }
-            
-            /*string Pretraga = txt_pretrazivanje.Text;
-            string Dbs = "SELECT * FROM odjeli WHERE naziv LIKE '%" + Pretraga + "%'";
-            OleDbConnection conn = new OleDbConnection(dbc.conn_string);
-            OleDbDataAdapter a = new OleDbDataAdapter(Dbs, conn);
-            DataTable dt = new DataTable();
-            try
-            {
-                conn.Open();
-                a.Fill(dt);
-                dgv_odjel.DataSource = dt;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(dbc.ExError + ex);
-            }
-            finally
-            {
-                conn.Close();
-            }*/
+            (DGV.DataSource as DataTable).DefaultView.RowFilter = 
+                string.Format("naziv LIKE '%{0}%'", txt_pretrazivanje.Text.Trim());
+            if (DGV.Rows[0].Cells[0].Value == null) 
+                return;           
         }
 
         private void DodajNoviUnosToolStripMenuItem_Click(object sender, EventArgs e)

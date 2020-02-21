@@ -11,9 +11,13 @@ namespace KPP_Alpha1
         readonly DbClass dbc = new DbClass();
         readonly EditClass uredi = new EditClass();
 
+        #region Properties
         public string TrazenaSifra { get; set; }
         public string IzTablice { get; set; }
         public string GdjeTrazim { get; set; }
+        #endregion
+
+        #region Methodes
         public Form_Posiljatelji()
         {
             InitializeComponent();
@@ -74,18 +78,23 @@ namespace KPP_Alpha1
                 TrazenaSifra = txt_mjesto.Text;
                 GdjeTrazim = "mjesto+' '+ptt";
                 IzTablice = "mjesta";
-                uredi.PosiljateljMjesto = uredi.Sifra(TrazenaSifra, IzTablice, GdjeTrazim);
-
-                bool success = uredi.InsertPosiljatelj(uredi);
-
-                if (success == true)
+                try
                 {
-                    DTUpdate();
-                    Clear();
+                    uredi.PosiljateljMjesto = uredi.Sifra(TrazenaSifra, IzTablice, GdjeTrazim);
                 }
-                else
+                catch (Exception ex) { MessageBox.Show(dbc.ExError + ex.Message, dbc.CelijaNazivObavjest); }
+                
+                if(uredi.PosiljateljMjesto != 0)
                 {
-                    MessageBox.Show(dbc.UnosError, dbc.CelijaNazivUpozorenje);
+                    bool success = uredi.InsertPosiljatelj(uredi);
+
+                    if (success == true)
+                    {
+                        DTUpdate();
+                        Clear();
+                    }
+                    else
+                        MessageBox.Show(dbc.UnosError, dbc.CelijaNazivUpozorenje);
                 }
             }
         }
@@ -151,15 +160,10 @@ namespace KPP_Alpha1
         }
         private void Txt_pretrazivanje_TextChanged(object sender, EventArgs e)
         {
-            string Pretraga = txt_pretrazivanje.Text;
-            string Dbs = "SELECT posiljatelji.id AS ID, posiljatelji.naziv AS Pošiljatelj, mjesta.mjesto AS Mjesto FROM posiljatelji" +
-                " INNER JOIN mjesta ON mjesta.id = posiljatelji.idmjesto WHERE posiljatelji.naziv LIKE '%" + Pretraga + "%'";
-
-            OleDbConnection conn = new OleDbConnection(dbc.conn_string);
-            OleDbDataAdapter a = new OleDbDataAdapter(Dbs, conn);
-            DataTable dt = new DataTable();
-            a.Fill(dt);
-            dgv_posiljatelji.DataSource = dt;
+            (dgv_posiljatelji.DataSource as DataTable).DefaultView.RowFilter = 
+                string.Format("pošiljatelj LIKE '%{0}%' OR mjesto LIKE '%{0}%'", txt_pretrazivanje.Text.Trim());
+            if (dgv_posiljatelji.Rows[0].Cells[0].Value == null)
+                return;
         }
         private void DodajNoviUnosToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -169,5 +173,6 @@ namespace KPP_Alpha1
         {
             btn_uredi.PerformClick();
         }
+        #endregion
     }
 }

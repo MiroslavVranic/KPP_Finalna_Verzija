@@ -13,6 +13,7 @@ namespace KPP_Alpha1
         readonly DbClass dbc = new DbClass();
         readonly EditClass uredi = new EditClass();
 
+        #region Methods
         public Form_Korisnici()
         {
             InitializeComponent();
@@ -116,26 +117,10 @@ namespace KPP_Alpha1
         }
         private void Txt_pretrazivanje_TextChanged(object sender, EventArgs e)
         {
-            string Pretraga = txt_pretrazivanje.Text;
-            string Dbs = "SELECT * FROM korisnici" +
-                " WHERE ime LIKE '%" + Pretraga + "%' OR prezime LIKE '%" + Pretraga + "%'";
-            OleDbConnection conn = new OleDbConnection(dbc.conn_string);
-            OleDbDataAdapter a = new OleDbDataAdapter(Dbs, conn);
-            DataTable dt = new DataTable();
-            try
-            {
-                conn.Open();
-                a.Fill(dt);
-                dgv_korisnik.DataSource = dt;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(dbc.ExError + ex, dbc.CelijaNazivObavjest);
-            }
-            finally
-            {
-                conn.Close();
-            }
+            (dgv_korisnik.DataSource as DataTable).DefaultView.RowFilter = 
+                string.Format("ime LIKE '%{0}%' OR prezime LIKE '%{0}%' OR korisnickoime LIKE '%{0}%' OR uloga LIKE '%{0}%'", txt_pretrazivanje.Text.Trim());
+            if (dgv_korisnik.Rows[0].Cells[0].Value == null)
+                return;
         }
         private void DodajNoviUnosToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -189,5 +174,6 @@ namespace KPP_Alpha1
             }
             MessageBox.Show(dbc.PraznaCelija, dbc.CelijaNazivUpozorenje);
         }
+        #endregion
     }
 }

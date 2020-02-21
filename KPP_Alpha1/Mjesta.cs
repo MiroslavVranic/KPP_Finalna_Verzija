@@ -84,15 +84,11 @@ namespace KPP_Alpha1
         }
         private void Txt_pretrazivanje_TextChanged(object sender, EventArgs e)
         {
-            string Pretraga = txt_pretrazivanje.Text;
-            string Dbs = "SELECT mjesta.id AS ID, mjesta.ptt AS 'Poštanski broj', mjesta.mjesto AS Mjesto, zupanije.zupanija AS Županija, mjesta.secKey AS 'Poštanski ured'" +
-            " FROM mjesta INNER JOIN zupanije ON mjesta.idZupanije = zupanije.id WHERE mjesta.mjesto LIKE '%" + Pretraga + "%' OR mjesta.ptt LIKE '%" + Pretraga + "%'";
-
-            OleDbConnection conn = new OleDbConnection(dbc.conn_string);
-            OleDbDataAdapter a = new OleDbDataAdapter(Dbs, conn);
-            DataTable dt = new DataTable();
-            a.Fill(dt);
-            DGV_Mjesta.DataSource = dt;
+            (DGV_Mjesta.DataSource as DataTable).DefaultView.RowFilter =
+                string.Format("['poštanski broj'] LIKE '%{0}%' OR mjesto LIKE '%{0}%' OR županija LIKE '%{0}%'",
+                txt_pretrazivanje.Text.Trim());
+            if (DGV_Mjesta.Rows[0].Cells[0].Value == null)
+                return;
         }
         private void Clear()
         {

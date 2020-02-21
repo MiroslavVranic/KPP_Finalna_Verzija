@@ -4,10 +4,16 @@ using System.Data.OleDb;
 
 namespace KPP_Alpha1
 {
-    class EditClass
+    class EditClass : DbClass
     {
-        readonly DbClass dbc = new DbClass();
-        //Get i seteri
+        readonly DbClass dbc = new DbClass(); // Objekt klase DbClass
+
+        /// <summary>
+        /// Klasa za uređivanje EDIT i unos INSERT podataka u bazu podataka
+        /// </summary>
+        /// 
+        
+        #region Getteri i setteri
         //Get, seteri za mjesto
         public int IdMjesto { get; set; }
         public string Ptt { get; set; }
@@ -31,7 +37,9 @@ namespace KPP_Alpha1
         public int TrazenaSifra { get; set; }
         //Cuvanje korisničkog imena ulogiranog korisnika
         public static string KorisnickoIme { get; set; }
-        //          UNOS I IZMJENA MJESTA
+        #endregion
+
+        #region Unos i izmjena (edit/insert) Mjesta
         public bool UpdateMjesto(EditClass e)
         {
             bool isSuccess = false;
@@ -97,7 +105,9 @@ namespace KPP_Alpha1
             }
             return isSuccess;
         }
-        //          UNOS I IZMJENA ODJELA
+        #endregion
+
+        #region Unos i izmjena (edit/insert) Odjela
         public bool InsertOdjel(EditClass e)
         {
             bool isSuccess = false;
@@ -153,7 +163,9 @@ namespace KPP_Alpha1
             }
             return isSuccess;
         }
-        //          UNOS I IZMJENA KORISNIKA
+        #endregion
+
+        #region Unos i izmjena (edit/inset) Korisnika
         public bool InsertKorisnik(EditClass e)
         {
             bool isSuccess = false;
@@ -217,7 +229,9 @@ namespace KPP_Alpha1
             }
             return isSuccess;
         }
-        //          UNOS I IZMJENA POSILJATELJA
+        #endregion
+
+        #region Unos i izmjena (edit/insert) Pošiljatelja
         public bool InsertPosiljatelj(EditClass e)
         {
             bool isSuccess = false;
@@ -276,6 +290,9 @@ namespace KPP_Alpha1
             }
             return isSuccess;
         }
+        #endregion
+
+        #region Metode za dohvačanje stranog ključa
         public int Sifra(string _sifra, string IzTablice, string GdjeTrazim)
         {
             string Trazi = "SELECT id FROM " + IzTablice + " WHERE " + GdjeTrazim + " = '" + _sifra + "';";
@@ -287,13 +304,15 @@ namespace KPP_Alpha1
                 Int32 TrazenaSifra = (Int32)cmd.ExecuteScalar();
                 return TrazenaSifra;
             }
-            catch (Exception) { }
+            catch (Exception) { throw; }
             finally
             {
                 conn.Close();
             }
-            return TrazenaSifra;
         }
+        #endregion
+
+        #region Metoda za postavljanje prijavljenog korsnika i njega prava
         public string UlogiraniKorisnik(string _korIme, string IzTablice, string GdjeTrazim)
         {
             string TrazeniKorisnik = "";
@@ -342,7 +361,9 @@ namespace KPP_Alpha1
             }
             return UlogaKorisnika;
         }
+        #endregion
 
+        #region Promjena lozinke
         public bool UpdateLozinka(EditClass e)
         {
             bool isSuccess = false;
@@ -371,5 +392,6 @@ namespace KPP_Alpha1
             }
             return isSuccess;
         }
+        #endregion
     }
 }

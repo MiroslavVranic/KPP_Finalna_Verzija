@@ -8,9 +8,10 @@ namespace KPP_Alpha1
 {
     class DbClass
     {
+        // String za konekciju na bazu
         public string conn_string = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=|DataDirectory|\\KPP.accdb; Persist Security Info = false";
-        //poruke korisniku kad nešto nije kako treba
 
+        #region Stringovi za razne poruke korisniku
         public string PraznaCelija = "Ćelije ne smiju biti prazne!";
 
         public string CelijaNazivUpozorenje = "Upozorenje";
@@ -24,6 +25,7 @@ namespace KPP_Alpha1
         public string IdError = "ID stavke nije prondađen!";
 
         public string ExError = "Dogodila se greška:\n";
+        #endregion
 
         public DataTable Select(string Dbs)
         {

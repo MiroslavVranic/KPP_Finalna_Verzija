@@ -112,8 +112,12 @@ namespace KPP_Alpha1
         //PRETRAŽIVANJE - SEARCH - PRETRAGA
         private void Txt_pretraži_TextChanged(object sender, EventArgs e)
         {
-            (DGV.DataSource as DataTable).DefaultView.RowFilter = string.Format("Pismeno LIKE '%{0}%' OR Brojčano LIKE '%{0}%' OR Pošiljatelj LIKE '%{0}%'", txt_pretrazivanje.Text.Trim());
-            if (DGV.Rows[0].Cells[0].Value == null) { return; }
+            (DGV.DataSource as DataTable).DefaultView.RowFilter = 
+                string.Format("Pismeno LIKE '%{0}%' OR Brojčano LIKE '%{0}%' OR Pošiljatelj LIKE '%{0}%' " +
+                "OR Odjel LIKE '%{0}%' OR Korisnik LIKE '%{0}%'", 
+                txt_pretrazivanje.Text.Trim());
+            if (DGV.Rows[0].Cells[0].Value == null) 
+                return;
         }
 
         private void Dgv_kpp_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
